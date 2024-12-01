@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            padding:0;
+            margin:0;
+            height: 100vh;
+            min-height: 100%;
+        }
+        #directions {
+            background: black;
+            color: white;
+            font-size: 100vh;
+            text-align: center;
+            height: 100%;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="directions"></div>
+    <button id="start">start</button>
+    <script src="./script.js"></script>
+    <script>
+        const startBtn = document.getElementById('start');
+        
+        startBtn.addEventListener('click', ()=> {
+            
+            const plan = new FenceStepper(20,5,10);
+            plan.init()
+        })
+    </script>
+</body>
+</html>
