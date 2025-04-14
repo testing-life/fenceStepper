@@ -8,9 +8,9 @@ class FenceStepper {
     );
   
     constructor(duration, minS, maxS) {
-      this.durationS = duration ?? 15;
-      this.minS = minS || 3;
-      this.maxS = maxS || 5;
+      this.durationS = duration ?? 20;
+      this.minS = minS || 2;
+      this.maxS = maxS || 3;
     }
   
     getDirection = () => {
