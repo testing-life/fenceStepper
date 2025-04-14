@@ -8,7 +8,7 @@ class FenceStepper {
     );
   
     constructor(duration, minS, maxS) {
-      this.durationS = duration ?? 20;
+      this.durationS = duration ?? 30;
       this.minS = minS || 2;
       this.maxS = maxS || 3;
     }
