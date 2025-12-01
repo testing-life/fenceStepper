@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        @property --duration {
+            syntax: "<string>";
+            initial-value: 1;
+            inherits: true;
+        }
         body {
             padding:0;
             margin:0;
             height: 100vh;
             min-height: 100%;
+            position: relative;
         }
         #directions {
             background: black;
@@ -19,18 +25,77 @@
             height: 100%;
             line-height: 1;
         }
+        #setup {
+            position: absolute;
+            top:calc(50% - 20%);
+            left:calc(50% - 20%);
+            width: min-content;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            label, input {
+                width: calc(100% - 20px);
+                padding: 10px;
+            }
+        }
+
+        #start {
+            background: goldenrod;
+            font-size:100px;
+            padding:50px;
+        }
+
+        .isHidden {
+            display:none !important;
+        }
+
+        #progress {
+            --duration: 0;            
+            background: lightblue;            
+            position: absolute;
+            width: 20px;
+            left: 0;
+            top: 0;            
+            bottom: 100%;            
+        }
+
+        #progress.withAnimation {
+            bottom: 0;
+            transition: bottom var(--duration);
+        }
+
     </style>
 </head>
 <body>
+    <div id="progress"></div>
     <div id="directions"></div>
-    <button id="start">start</button>
+    <div class="col" id="setup">
+    <label>
+        <input type="number" id="durationS" type='number' placeholder="total duration in s"/>        
+    </label>
+     <label>
+        <input type="number" id="minS" type='number' placeholder="minimum per exercise in s"/>        
+    </label>
+      <label>
+        <input type="number" id="maxS" type='number' placeholder="maximum exercise in s"/>        
+      </label>
+        <button id="start">start</button>
+    </div>
     <script src="./script.js"></script>
     <script>
         const startBtn = document.getElementById('start');
+        const setupBox = document.getElementById('setup');
+        const durationInput = document.getElementById('durationS');
+        const maxInput = document.getElementById('maxS');
+        const minInput = document.getElementById('minS');
         
         startBtn.addEventListener('click', ()=> {
-            
-            const plan = new FenceStepper(20,5,10);
+            const duration = Math.round(parseInt(durationInput.value,10)) || 30;
+            const min = Math.round(parseInt(minInput.value,10)) || 5;
+            const max = Math.round(parseInt(maxInput.value,10)) || 10;
+            setupBox.classList.add('isHidden');
+            const plan = new FenceStepper(duration,min,max);
             plan.init()
         })
     </script>
