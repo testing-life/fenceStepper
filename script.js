@@ -1,23 +1,24 @@
 class FenceStepper {
-    durationS;
     exercises = [];
     maxS;
     maxS;
     #movementDict = new Map(
       Object.entries({ 1: "F", 2: "B", 3: "C" })
     );
+    setupContainer = document.getElementById('setup');
+    meterContainer = document.getElementById('progress');
   
-    constructor(duration, minS, maxS) {
-      this.durationS = duration ?? 90;
-      this.minS = minS || 2;
-      this.maxS = maxS || 3;
+    constructor(durationS, minLengthS, maxLengthS) {
+      this.durationS = durationS;
+      this.minLengthS = minLengthS;
+      this.maxLengthS = maxLengthS;
     }
   
     getDirection = () => {
       return Math.floor(Math.random() * 3) + 1;
     };
   
-    createMotion = ({ minLengthS = 3, maxLengthS = 5, direction = 1 } = {}) => ({
+    createMotion = ({ minLengthS, maxLengthS, direction } = {}) => ({
       durationS:
         direction === 3 ? 2 : this.getRandomDuration(minLengthS, maxLengthS),
       direction,
@@ -33,14 +34,11 @@ class FenceStepper {
       arr.reduce((acc, curr) => acc + curr?.durationS || 0, 0);
   
     getExercises = (callback) => {
+      console.log('this', this)
       let exercises = [];
       do {
         const direction = this.getDirection();
-        exercises.push(
-          exercises.length
-            ? this.createMotion({ direction })
-            : this.createMotion()
-        );
+        exercises.push(this.createMotion({minLengthS:this.minLengthS, maxLengthS: this.maxLengthS, direction}));
         console.log(exercises);
       } while (this.sumDurations(exercises) < this.durationS);
       this.exercises = exercises;
@@ -51,35 +49,37 @@ class FenceStepper {
       let currentIndex = 0;
   
       const displayNextDirection = () => {
-        if (currentIndex >= exercises.length) {
+        if (currentIndex >= exercises.length) {    
+          this.setupContainer.classList.remove('isHidden');      
           return;
-        }
+        }        
+        
         const item = exercises[currentIndex];
+        console.log('meterContainer', this.meterContainer)
+        
         const { durationS, direction } = item;
-  
-        const contentElement = document.getElementById("directions");
-  
+        this.meterContainer.style.setProperty('--duration', `${durationS}s`);
+        this.meterContainer.classList.add('withAnimation');
+        const contentElement = document.getElementById("directions");  
         contentElement.classList.add("direction");
         contentElement.textContent = `${this.#movementDict.get(
           direction.toString()
         )}`;
   
-        // Show the direction
-        //   directionElement.style.display = 'block';
   
         // Hide it after the specified duration (durationS seconds)
-        setTimeout(() => {
-          // directionElement.style.display = 'none';
-          contentElement.textContent = "X";
+        setTimeout(() => {          
+          contentElement.textContent = "";          
+          this.meterContainer.classList.remove('withAnimation');
           currentIndex++;
-          displayNextDirection();
+          displayNextDirection();          
         }, durationS * 1000);
       };
   
       displayNextDirection();
     };
   
-    init = () => {
+    init = () => {      
       this.getExercises(this.startLoop);
     };
   }
